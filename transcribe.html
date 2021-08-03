@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>言語翻訳庁式からIPA転写・アラビア文字転写への変換</title>
+    <script>
+        const main = (converter, lines) =>
+            lines.split("\n").map(
+                line => line.trim().split(/\s+/).map(converter).join(" ")
+            ).join("\n");
+        const to_arabic_transcription = (word) => {
+            // 長短は対立しないので、母音の後の r は消す
+            word = word.replace(/([aeiouy])r/g, "$1");
+
+            // digraph を先に処理
+            word = word.replace(/ea/g, "ɛ");
+            word = word.replace(/oa/g, "ɔ");
+            word = word.replace(/eo/g, "ə");
+            word = word.replace(/kw/g, "q");
+            word = word.replace(/gw/g, "ぐ");
+            word = word.replace(/hw/g, "ふ");
+
+            // 母音の後の r は消したので、 'r を r にする
+            word = word.replace(/'r/g, "r");
+
+            // coda の s は c
+            word = word.replace(/s([^aeiouy])/g, "c$1");
+            word = word.replace(/s$/g, "c");
+
+            return [...word].map(c => ({
+                "i": "ِه",
+                "y": "َه",
+                "u": "ُه",
+                "e": "ِع",
+                "ə": "َع",
+                "o": "ُع",
+                "ɛ": "ِا",
+                "a": "َا",
+                "ɔ": "ُا",
+                "p": "ف",
+                "t": "ت",
+                "k": "ك",
+                "q": "ق",
+                "b": "ب",
+                "v": "ب",
+                "d": "د",
+                "s": "د",
+                "g": "ج",
+                "ぐ": "غ",
+                "c": "س",
+                "h": "ح",
+                "ふ": "خ",
+                "m": "م",
+                "n": "ن",
+                "l": "ل",
+                "w": "و",
+                "r": "ر",
+                "j": "ي",
+            }[c] ?? "؟")).join('');
+        };
+    </script>
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif;" onload="document.getElementById('ar').value = main(to_arabic_transcription, document.getElementById('in').value)">
+    <textarea id="in" spellcheck="false" rows="10" cols="80" style="font-family: Arial, Helvetica, sans-serif;"
+        onkeyup="document.getElementById('ar').value = main(to_arabic_transcription, document.getElementById('in').value)">hearmi lahpeo cormutko</textarea><br>
+
+    <textarea readonly id="ar" lang="ar" spellcheck="false" rows="10" cols="40"
+        style="font-family: Arial, Helvetica, serif; font-size: 200%;"></textarea><br>
+
+</body>
+
+</html>
