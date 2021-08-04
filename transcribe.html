@@ -28,7 +28,7 @@
             word = word.replace(/s([^aeiouy])/g, "c$1");
             word = word.replace(/s$/g, "c");
 
-            return [...word].map(c => ({
+            const ans = [...word].map(c => ({
                 "i": "ِه",
                 "y": "َه",
                 "u": "ُه",
@@ -58,13 +58,18 @@
                 "r": "ر",
                 "j": "ي",
             }[c] ?? "؟")).join('');
+
+            // 母音始まりの場合、文字列の頭にある母音符号を2文字目に持って行く必要がある
+            return ans.charAt(0) == "ِ" || ans.charAt(0) == "َ" || ans.charAt(0) == "ُ" ? ans.charAt(1) + ans.charAt(0) + ans.slice(2) : ans;
         };
     </script>
 </head>
 
-<body style="font-family: Arial, Helvetica, sans-serif;" onload="document.getElementById('ar').value = main(to_arabic_transcription, document.getElementById('in').value)">
+<body style="font-family: Arial, Helvetica, sans-serif;"
+    onload="document.getElementById('ar').value = main(to_arabic_transcription, document.getElementById('in').value)">
+    <a href="https://docs.google.com/document/d/1o2ITt7o6VUkCTI7V7O6B2O4WbyyP5F-Af8irs4JHyjY/edit#">仕様</a><br>
     <textarea id="in" spellcheck="false" rows="10" cols="80" style="font-family: Arial, Helvetica, sans-serif;"
-        onkeyup="document.getElementById('ar').value = main(to_arabic_transcription, document.getElementById('in').value)">hearmi lahpeo cormutko</textarea><br>
+        onkeyup="document.getElementById('ar').value = main(to_arabic_transcription, document.getElementById('in').value)">hearmi lahpeo cormutko tarh birl jeska aceomyha</textarea><br>
 
     <textarea readonly id="ar" lang="ar" spellcheck="false" rows="10" cols="40"
         style="font-family: Arial, Helvetica, serif; font-size: 200%;" dir="rtl"></textarea><br>
